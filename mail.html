@@ -16,26 +16,70 @@
         </div>
         <div class="row justify-content-center text-light">
             <div class="col-md-5">
-<form>
+<form name="pf_contact_form">
+  <div class="alert alert-success alert-dismissible fade show d-none alert-ku" role="alert">
+  <strong>Thank you!</strong> pesan anda sudah terkirim.
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
   <div class="mb-3">
     <label for="name" class="form-label">Nama Lengkap</label>
-    <input type="text" class="form-control" id="name" aria-describedby="name">
+    <input type="text" class="form-control" id="name" aria-describedby="name" placeholder="your name" name="nama">
   </div>
   <div class="mb-3">
     <label for="email" class="form-label">Email</label>
-    <input type="email" class="form-control" id="email" aria-describedby="email">
+    <input type="email" class="form-control" id="email" aria-describedby="email" placeholder="your_email@example.com" name="email">
   </div>
 <div class="mb-3">
   <label for="pesan" class="form-label">Pesan</label>
-  <textarea class="form-control" id="pesan" rows="3"></textarea>
+  <textarea class="form-control" id="pesan" rows="3" name="pesan"></textarea>
 </div>
+
+<!-- btn back -->
 <a class="btn btn-danger" href="index.html" role="button">Back</a>
-  <button type="submit" class="btn btn-primary">Send</button>
+
+<!-- btn send -->
+  <button type="submit" class="btn btn-primary btn-send">Send</button>
+
+  <!-- btn loading -->
+  <button class="btn btn-primary d-none btn-loading" type="button" disabled>
+  <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+  <span role="status">Loading...</span>
+</button>
+
 </form>
             </div>
         </div>
     </div>
     </section>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+<script>
+	const scriptURL = 'https://script.google.com/macros/s/AKfycbxIdbkelj3z8dla75SJS0ae2fsG8OynFOpyf2swD5UNv3DgKWvCTHcsrGZUVPkY4o5U/exec'
+	const form = document.forms['pf_contact_form']
+  const btnsend = document.querySelector('.btn-send');
+  const btnloading = document.querySelector('.btn-loading');
+  const alertku = document.querySelector('.alert-ku');
+
+	form.addEventListener('submit', e => {
+		e.preventDefault()
+
+      btnloading.classList.toggle('d-none');
+      btnsend.classList.toggle('d-none');
+
+		fetch(scriptURL, { method: 'POST', body: new FormData(form) })
+			.then(response => response.json())
+			.then(response => {
+
+       btnloading.classList.toggle('d-none');
+       btnsend.classList.toggle('d-none');
+       alertku.classList.toggle('d-none');
+       form.reset();
+
+        console.log('Success!', response)
+      })
+			.catch(error => console.error('Error!', error.message))
+	})
+</script>
+
 </body>
 </html>
